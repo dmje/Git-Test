@@ -12,6 +12,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: 104.248.162.122
+        port: 22
         server-dir: public_html/temp/githubactions/
         username: githubworkflowtest
         password: ${{ secrets.ftp_password }}
