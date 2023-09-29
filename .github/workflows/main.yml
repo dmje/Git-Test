@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     name: deploy
     steps:
-        - name: Checkout
+        name: Checkout
         uses: actions/checkout@v2
-        - name: deploy file
+        name: deploy file
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
             username: 'githubworkflowtest'
