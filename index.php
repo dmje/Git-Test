@@ -40,7 +40,13 @@
 <body>
 	<h1>Hello world</h1>
 	
-	<p>It is...<?php echo echo date('jS F Y');?></p>
+	<?php 
+	
+	echo 'WTF?';
+	
+	?>
+	
+	<p>It is...</p>
 
 	<p>Here we go again.</p>
 
