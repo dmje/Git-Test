@@ -1,0 +1,33 @@
+name: Deploy thing to Cloudways
+
+on:
+  push:
+	branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+	runs-on: ubuntu-latest
+	
+	steps:
+	- name: Checkout code
+	  uses: actions/checkout@v4
+	
+	- name: Deploy to Cloudways via SFTP
+	  uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+	  with:
+		server: ${{ secrets.CLOUDWAYS_HOST }}
+		username: ${{ secrets.CLOUDWAYS_USERNAME }}
+		password: ${{ secrets.CLOUDWAYS_PASSWORD }}
+		port: ${{ secrets.CLOUDWAYS_PORT }}
+		protocol: sftp
+		local-dir: ./
+		server-dir: /public_html/wp-content/themes/your-theme-name/
+		exclude: |
+		  **/.git*
+		  **/.git*/**
+		  **/.github/**
+		  **/node_modules/**
+		  *.md
+		  .gitignore
+		  LICENSE
