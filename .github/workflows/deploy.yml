@@ -1,33 +1,25 @@
 name: deploy
+
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
-  new-version-release:
+  deploy:
     runs-on: ubuntu-latest
- 
     steps:
- 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Deploy via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          fetch-depth: 0
- 
-      - name: Build dist folder
-        run: |
-          mkdir -p dist
-          rsync -r --exclude 'dist' --exclude '.git' --exclude '.github' --exclude '.gitignore' . dist
- 
-      - name: Deploy with rsync
-        env:
-          remote_host: ${{ secrets.CLOUDWAYS_HOST }}
-          remote_port: "22"
-          remote_user: ${{ secrets.CLOUDWAYS_USER }}
-          remote_key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
-          local_dir: "dist/"
-          remote_dir: "test"
-        run: |
-          mkdir ~/.ssh
-          echo "$remote_key" > ~/.ssh/gh_actions_key
-          chmod 600 ~/.ssh/gh_actions_key
-          rsync -avzr -e "ssh -p ${remote_port} -i ~/.ssh/gh_actions_key -o StrictHost
+          server: ${{ secrets.CLOUDWAYS_HOST }}
+          username: ${{ secrets.CLOUDWAYS_USER }}       # Application user
+          password: ${{ secrets.CLOUDWAYS_PASSWORD }}
+          protocol: sftp
+          local-dir: ./
+          server-dir: public_html/                      # <-- Cloudways app path
+          exclude: |
+            **/.git*
+            **/.github/**
