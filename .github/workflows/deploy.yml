@@ -25,7 +25,7 @@ jobs:
           remote_user: ${{ secrets.CLOUDWAYS_USER }}
           remote_key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
           local_dir: "dist/"
-          remote_dir: ""
+          remote_dir: "test"
         run: |
           mkdir ~/.ssh
           echo "$remote_key" > ~/.ssh/gh_actions_key
