@@ -15,7 +15,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.CLOUDWAYS_HOST }}
-          username: ${{ secrets.CLOUDWAYS_USER }}       # Application user
+          username: ${{ secrets.CLOUDWAYS_USERNAME }}       # Application user
           password: ${{ secrets.CLOUDWAYS_PASSWORD }}
           protocol: sftp
           local-dir: ./
