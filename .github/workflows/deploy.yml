@@ -1,31 +1,33 @@
-name: Deploy to Cloudways (SSH rsync)
-
+name: deploy
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
-
+    branches:
+      - master
 jobs:
-  deploy:
+  new-version-release:
     runs-on: ubuntu-latest
+ 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.CLOUDWAYS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          # Optional: strict host key checking off for CI
-          echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-
-      - name: rsync to Cloudways
-        uses: burnett01/rsync-deployments@6.0.0
+ 
+      - uses: actions/checkout@v2
         with:
-          switches: -az --delete --exclude='.git*' --exclude='.github/' --exclude='node_modules/' --exclude='*.md' --exclude='LICENSE'
-          path: ./
-          remote_path: public_html/
+          fetch-depth: 0
+ 
+      - name: Build dist folder
+        run: |
+          mkdir -p dist
+          rsync -r --exclude 'dist' --exclude '.git' --exclude '.github' --exclude '.gitignore' . dist
+ 
+      - name: Deploy with rsync
+        env:
           remote_host: ${{ secrets.CLOUDWAYS_HOST }}
-          remote_user: ${{ secrets.CLOUDWAYS_USERNAME }}
-          remote_port: 22
+          remote_port: "22"
+          remote_user: ${{ secrets.CLOUDWAYS_USER }}
+          remote_key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
+          local_dir: "dist/"
+          remote_dir: ""
+        run: |
+          mkdir ~/.ssh
+          echo "$remote_key" > ~/.ssh/gh_actions_key
+          chmod 600 ~/.ssh/gh_actions_key
+          rsync -avzr -e "ssh -p ${remote_port} -i ~/.ssh/gh_actions_key -o StrictHost
