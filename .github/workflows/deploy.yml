@@ -1,4 +1,4 @@
-name: Deploy thing to Cloudways
+name: Deploy to Cloudways (SSH rsync)
 
 on:
   push:
@@ -8,20 +8,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Deploy to Cloudways via SSH
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.CLOUDWAYS_HOST }}
-        username: ${{ secrets.CLOUDWAYS_USERNAME }}
-        password: ${{ secrets.CLOUDWAYS_PASSWORD }}
-        port: 22
-        script: |
-          cd /public_html/
-          git pull origin main
-          find . -type f -exec chmod 644 {} \;
-          find . -type d -exec chmod 755 {} \;
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.CLOUDWAYS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Optional: strict host key checking off for CI
+          echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+      - name: rsync to Cloudways
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -az --delete --exclude='.git*' --exclude='.github/' --exclude='node_modules/' --exclude='*.md' --exclude='LICENSE'
+          path: ./
+          remote_path: public_html/
+          remote_host: ${{ secrets.CLOUDWAYS_HOST }}
+          remote_user: ${{ secrets.CLOUDWAYS_USERNAME }}
+          remote_port: 22
