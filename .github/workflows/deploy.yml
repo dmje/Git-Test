@@ -11,15 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Sync to Cloudways (rsync over SSH)
+        uses: burnett01/rsync-deployments@7.1.0
         with:
-          server: ${{ secrets.CLOUDWAYS_HOST }}
-          username: ${{ secrets.CLOUDWAYS_USERNAME }}       # Application user
-          password: ${{ secrets.CLOUDWAYS_PASSWORD }}
-          protocol: sftp
-          local-dir: ./
-          server-dir: public_html/                      # <-- Cloudways app path
-          exclude: |
-            **/.git*
-            **/.github/**
+          switches: -az --delete --exclude='.git*' --exclude='.github/'
+          path: ./                      # local source (the repo)
+          remote_path: ~/public_html/   # Cloudways app path
+          remote_host: ${{ secrets.CLOUDWAYS_HOST }}   # server IP
+          remote_user: ${{ secrets.CLOUDWAYS_USER }}   # Application user
+          remote_key:  ${{ secrets.CLOUDWAYS_SSH_KEY }}# private key
