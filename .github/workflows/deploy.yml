@@ -1,22 +1,24 @@
-name: deploy
+name: Deploy to environment
 
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+# Trigger the workflow on push
+on: push
 
+# Authenticate to the the server via ssh
+# and run our deployment script (sftp upload)
 jobs:
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Sync to Cloudways (rsync over SSH)
-        uses: burnett01/rsync-deployments@7.1.0
+      - name: SFTP upload
+        uses: Dylan700/sftp-upload-action@latest
         with:
-          switches: -az --delete --exclude='.git*' --exclude='.github/'
-          path: ./                      # local source (the repo)
-          remote_path: ~/public_html/   # Cloudways app path
-          remote_host: ${{ secrets.CLOUDWAYS_HOST }}   # server IP
-          remote_user: ${{ secrets.CLOUDWAYS_USER }}   # Application user
-          remote_key:  ${{ secrets.CLOUDWAYS_SSH_KEY }}# private key
+          server: ${{ vars.CLOUDWAYS_HOST }}
+          username: ${{ vars.CLOUDWAYS_USERNAME }}
+          key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
+          port: 22
+          uploads: |
+            ./theme/ => ${{ vars.CLOUDWAYS_FOLDER }}
