@@ -21,4 +21,4 @@ jobs:
           password: ${{ secrets.CLOUDWAYS_PASSWORD }}
           port: 22
           uploads: |
-            ./theme/ => ${{ secrets.CLOUDWAYS_FOLDER }}
+            ./ => ${{ secrets.CLOUDWAYS_FOLDER }}
