@@ -2,7 +2,7 @@
 
 Officia in anim sunt in aliquip Lorem nostrud consectetur pariatur mollit est cupidatat quis ut commodo. Incididunt fugiat ullamco duis fugiat excepteur amet fugiat ex amet ut occaecat est do consectetur incididunt. Voluptate amet sit occaecat incididunt dolore enim excepteur veniam nisi veniam in magna consectetur ullamco. Laborum mollit aute non velit. Aute enim ullamco officia ea est qui sit.
 
-!(/images/placeholder.png)
+<img width="600" height="400" alt="placeholder" src="https://github.com/user-attachments/assets/7d768a12-a965-4590-80a8-d6d33d1723bf" />
 
 Ad adipisicing sint Lorem ipsum non elit consectetur magna culpa duis pariatur excepteur do veniam. Exercitation cillum cupidatat minim ex do ex. Quis ex laboris ipsum. Laboris veniam quis non aliquip in. Nisi in officia reprehenderit aliqua est reprehenderit sint culpa. Do labore do esse aliquip.
 
