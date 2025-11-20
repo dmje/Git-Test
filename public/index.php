@@ -60,7 +60,7 @@
 			}
 		}
 		?>
-		<div class="hello-world">Hello World!</div>
+		<div class="hello-world">Hello World. It is me, again.</div>
 	</div>
 </body>
 </html>
